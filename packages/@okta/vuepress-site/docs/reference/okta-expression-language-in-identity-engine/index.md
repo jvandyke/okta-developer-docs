@@ -10,7 +10,7 @@ meta:
 <ApiLifecycle access="ie" /><br>
 <ApiLifecycle access="Limited GA" />
 
-## Overview
+## User Profile Expressions
 
 Expressions allow you to reference, transform, and combine properties before you store them on a user profile or before passing them to an application for authentication or provisioning. For example, you might use a custom expression to create a username by stripping `@company.com` from an email address. Or, you might combine `firstName` and lastName properties into a single `displayName` property.
 
@@ -253,3 +253,22 @@ If the middle initial is not empty, include it as part of the full name, using j
 
 If the user is a contractor and is a member of the "West Coast Users" user group, output "West coast contractors", else output "Others".<br>
 `user.profile.isContractor && user.isMemberOf({'group.profile.name': 'West Coast Users'}) ? "West coast contractors" : "Others"`
+
+## Security Expressions
+
+In [App Sign On Policies](/docs/reference/api/policy/#app-sign-on-policy), you can additionally specify certain [Rule Conditions](/docs/reference/api/policy/#conditions) using expressions based on the security context of the request.
+The security context can be used to match requests for a given risk level or for matching a given [Behavior](https://help.okta.com/en/prod/Content/Topics/Security/proc-security-behavior-detection.htm).
+
+Any Behavior defined in your organization can be used in a Rule Condition expression using the syntax `security.behaviors.contains('behaviorName')`.
+
+Examples:
+
+- `security.behaviors.contains('New Location')`
+- `security.behaviors.contains('New IP') && security.behaviors.contains('New Device')`
+
+Similarly, you can specify a Rule Condition matching a certain risk level by using the `security.risk.level` property, with any of the risk level values `LOW`, `MEDIUM`, or `HIGH`.
+Examples:
+
+- `security.risk.level == 'HIGH'`
+- `security.risk.level == 'MEDIUM'`
+- `security.risk.level == 'HIGH' && security.behaviors.contains('New IP')`
